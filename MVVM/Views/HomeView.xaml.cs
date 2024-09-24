@@ -19,12 +19,11 @@ namespace TextEditor.MVVM.Views
     /// <summary>
     /// Interaction logic for HomePage.xaml
     /// </summary>
-    public partial class HomePage : UserControl
+    public partial class HomeView : UserControl
     {
-        public HomePage()
+        public HomeView()
         {
             InitializeComponent();
-            DataContext = new HomeViewModel();
         }
     }
 }

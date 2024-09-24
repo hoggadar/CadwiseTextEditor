@@ -1,37 +1,33 @@
-﻿using System.IO;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Navigation;
-using Microsoft.Win32;
 using TextEditor.MVVM.Commands;
-using TextEditor.MVVM.Views;
+using TextEditor.MVVM.Navigation;
 
 namespace TextEditor.MVVM.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        private object _currentView;
-        
-        public ICommand NavigateToHome { get; }
-        public ICommand NavigateToAbout { get; }
-        
+        private INavigationService _navigationService;
 
-        public MainViewModel()
+        public ICommand NavigateToHomeCommand { get; }
+        public ICommand NavigateToHelpCommand { get; }
+        public ICommand NavigateToAboutCommand { get; }
+
+        public MainViewModel(INavigationService navigationService)
         {
-            _currentView = new HomePage();
-            OnPropertyChanged(nameof(CurrentView));
-            NavigateToHome = new RelayCommand(_ => CurrentView = new HomePage(), _ => true);
-            NavigateToAbout = new RelayCommand(_ => CurrentView = new AboutPage(), _ => true);
+            _navigationService = navigationService;
+            NavigateToHomeCommand = new RelayCommand(_ => NavigationService.NavigateTo<HomeViewModel>(), _ => true);
+            NavigateToHelpCommand = new RelayCommand(_ => NavigationService.NavigateTo<HelpViewModel>(), _ => true);
+            NavigateToAboutCommand = new RelayCommand(_ => NavigationService.NavigateTo<AboutViewModel>(), _ => true);
         }
 
-        public object CurrentView
+        public INavigationService NavigationService
         {
-            get => _currentView;
+            get => _navigationService;
             set
             {
-                if (_currentView == value) return;
-                _currentView = value;
-                OnPropertyChanged();
+                _navigationService = value;
+                OnPropertyChanged(nameof(NavigationService));
             }
         }
     }

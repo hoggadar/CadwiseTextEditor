@@ -19,12 +19,11 @@ namespace TextEditor.MVVM.Views
     /// <summary>
     /// Interaction logic for AboutPage.xaml
     /// </summary>
-    public partial class AboutPage : UserControl
+    public partial class AboutView : UserControl
     {
-        public AboutPage()
+        public AboutView()
         {
             InitializeComponent();
-            DataContext = new AboutViewModel();
         }
     }
 }

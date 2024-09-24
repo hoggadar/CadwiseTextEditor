@@ -11,7 +11,6 @@ namespace TextEditor.MVVM.Views
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
         }
     }
 }

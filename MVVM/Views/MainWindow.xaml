@@ -4,39 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:viewModel="clr-namespace:TextEditor.MVVM.ViewModels"
+        xmlns:view="clr-namespace:TextEditor.MVVM.Views"
         mc:Ignorable="d"
         Title="TextEditor"
         Height="600"
         Width="850">
 
     <Window.Resources>
-        <Style x:Key="NavButton" TargetType="Button">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Padding="10,5" CornerRadius="8"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}">
-                            <StackPanel Orientation="Horizontal"
-                                        VerticalAlignment="Center">
-                                <TextBlock VerticalAlignment="Center" FontSize="18"
-                                           Foreground="White" Text="{TemplateBinding Content}"/>
-                            </StackPanel>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#01b075"/>
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#017a5d"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+        
+        
+        
     </Window.Resources>
     
     <Grid>
@@ -54,30 +32,34 @@
                 <Border Grid.Column="0" Padding="12" Background="#202125">
                     <StackPanel>
                         <Button Style="{StaticResource NavButton}"
-                                Command="{Binding NavigateToHome}"
-                                 Content="Home"/>
+                                Command="{Binding NavigateToHomeCommand}"
+                                 Content="Главная"/>
                         <Button Style="{StaticResource NavButton}"
-                                Command="{Binding NavigateToAbout}"
-                                Content="About" />
+                                Command="{Binding NavigateToHelpCommand}"
+                                Content="Помощь"/>
+                        <Button Style="{StaticResource NavButton}"
+                                Command="{Binding NavigateToAboutCommand}"
+                                Content="О нас" />
                     </StackPanel>
                 </Border>
 
                 <!--Application Content-->
-                <Border Grid.Column="1" Padding="12">
+                <Border Grid.Column="1" Padding="8">
 
                     <Grid>
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="60"/>
                             <RowDefinition Height="*"/>
-                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="40"/>
                         </Grid.RowDefinitions>
 
                         <!--Header-->
                         <Grid Grid.Row="0">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Cadwise" FontSize="24" FontWeight="Bold"
-                                           Foreground="#01b075" VerticalAlignment="Center"/>
+                                           Foreground="#01b075" VerticalAlignment="Center"
+                                           Margin="0,0,6,0"/>
                                 <TextBlock Text="TextEditor" FontSize="24" FontWeight="Bold"
                                            Foreground="White" VerticalAlignment="Center"/>
                             </StackPanel>
@@ -85,12 +67,18 @@
 
                         <!--Main content-->
                         <Grid Grid.Row="1">
-                            <ContentControl Content="{Binding CurrentView}"/>
+                            <ContentControl Content="{Binding NavigationService.CurrentView}"/>
                         </Grid>
 
                         <!--Footer-->
                         <Grid Grid.Row="2">
-                            <TextBlock Text="Footer"/>
+
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+                                <TextBlock Text="© 2024 Cadwise. Все права защищены."
+                                           Style="{StaticResource BaseText}"/>
+                            </StackPanel>
+                            
                         </Grid>
 
                     </Grid>
