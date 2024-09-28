@@ -14,15 +14,9 @@ namespace TextEditor.MVVM.ViewModels
         private int _wordLength;
         private bool _isDeleteWords;
         private bool _isDeletePunctuation;
-        private string _fileContent;
+        private List<string> _inputFileNames;
 
-        private string _inputFileName;
-        private string _outputFileName;
-
-        public ICommand OpenInputFileCommand { get; }
-        public ICommand OpenOutputFileCommand { get; }
-        public ICommand GetOriginalContentCommand { get; }
-        public ICommand GetChangedContentCommand { get; }
+        public ICommand OpenInputFilesCommand { get; }
         public ICommand SaveContentCommand { get; }
 
         public HomeViewModel(IContentHandler contentHandler)
@@ -32,87 +26,47 @@ namespace TextEditor.MVVM.ViewModels
             _wordLength = 5;
             _isDeleteWords = false;
             _isDeletePunctuation = false;
-            _fileContent = string.Empty;
+            _inputFileNames = new List<string>();
 
-            _inputFileName = string.Empty;
-            _outputFileName = string.Empty;
-
-            OpenInputFileCommand = new RelayCommand(_ => OpenInputFile(), _ => true);
-            OpenOutputFileCommand = new RelayCommand(_ => OpenOutputFile(), _ => true);
-            GetOriginalContentCommand = new RelayCommand(_ => GetOriginalContent(), _ => true);
-            GetChangedContentCommand = new RelayCommand(_ => GetChangedContent(), _ => true);
-            SaveContentCommand = new RelayCommand(_ => SaveContent(), _ => true);
+            OpenInputFilesCommand = new RelayCommand(_ => OpenInputFiles(), _ => true);
+            SaveContentCommand = new RelayCommand(async _ => await SaveContent(), _ => true);
         }
 
-        private void OpenInputFile()
+        private void OpenInputFiles()
         {
             OpenFileDialog dialog = new OpenFileDialog
             {
                 Title = "Выберите файл",
-                Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*"
+                Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*",
+                Multiselect = true
             };
-
-            if (dialog.ShowDialog() == true)
-            {
-                _inputFileName = dialog.FileName;
-                UploadFileContent();
-            }
+            if (dialog.ShowDialog() == true) _inputFileNames = dialog.FileNames.ToList();
         }
 
-        private void OpenOutputFile()
-        {
-            OpenFileDialog dialog = new OpenFileDialog
-            {
-                Title = "Выберите файл",
-                Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*"
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                _outputFileName = dialog.FileName;
-            }
-        }
-
-        private void GetOriginalContent()
-        {
-            if (string.IsNullOrEmpty(_inputFileName)) return;
-            UploadFileContent();
-        }
-
-        private void GetChangedContent()
-        {
-            GetOriginalContent();
-
-            if (!_isDeleteWords && !_isDeletePunctuation) return;
-
-            if (_isDeleteWords)
-            {
-                FileContent = _contentHandler.DeleteWords(_fileContent, _wordLength);
-            }
-            if (_isDeletePunctuation)
-            {
-                FileContent = _contentHandler.DeletePunctuation(_fileContent);
-            }
-        }
-
-        private void SaveContent()
-        {
-            if (_inputFileName != string.Empty)
-            {
-
-            }
-        }
-
-        private void UploadFileContent()
+        private async Task SaveContent()
         {
             try
             {
-                string fileContent = File.ReadAllText(_inputFileName);
-                FileContent = fileContent;
-            }
-            catch (Exception ex)
+                foreach (var inputFileName in _inputFileNames)
+                {
+                    string outputFileName = Path.Combine(
+                        Path.GetDirectoryName(inputFileName),
+                        $"{Path.GetFileNameWithoutExtension(inputFileName)}_result{Path.GetExtension(inputFileName)}");
+
+                    var wordLength = (_isDeleteWords) ? _wordLength : -1;
+                    MessageBox.Show(_isDeletePunctuation.ToString());
+                    var processedContent = await _contentHandler.DeleteWordsAndPunctuation(inputFileName, wordLength, _isDeletePunctuation);
+
+                    using (StreamWriter writer = new StreamWriter(outputFileName))
+                    {
+                        await writer.WriteAsync(processedContent.ToString());
+                    }
+
+                    MessageBox.Show("Содержимое успешно сохранено.");
+                }
+            } catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при чтении файла: {ex.Message}");
+                MessageBox.Show($"Ошибка при сохранении файла: {ex.Message}");
             }
         }
 
@@ -143,16 +97,6 @@ namespace TextEditor.MVVM.ViewModels
             {
                 _isDeletePunctuation = value;
                 OnPropertyChanged(nameof(IsDeletePunctuation));
-            }
-        }
-
-        public string FileContent
-        {
-            get => _fileContent;
-            set
-            {
-                _fileContent = value;
-                OnPropertyChanged(nameof(FileContent));
             }
         }
     }

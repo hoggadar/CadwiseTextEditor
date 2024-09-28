@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using TextEditor.Ineterfases;
 
@@ -6,38 +7,41 @@ namespace TextEditor.Services
 {
     public class ContentHandler : IContentHandler
     {
-        public string DeleteWords(string str, int minLength)
+        public async Task<StringBuilder> DeleteWordsAndPunctuation(string filePath, int minLength, bool removePunctuation)
         {
             StringBuilder sb = new StringBuilder();
-            string pattern = @"[\wÀ-ÿ]+|[^\s\wÀ-ÿ]+|[\n]";
-            MatchCollection matches = Regex.Matches(str, pattern);
-            bool lastNewLine = true;
 
-            foreach (Match match in matches)
+            await Task.Run(() =>
             {
-                string word = match.Value;
-                if (word == "\n")
+                using (StreamReader reader = new StreamReader(filePath))
                 {
-                    if (!lastNewLine)
-                    {
-                        sb.Append(word);
-                        lastNewLine = true;
-                    } 
-                }
-                else if (word.Length >= minLength || Regex.IsMatch(word, @"[^\w\s]"))
-                {
-                    if (sb.Length > 0 && sb[sb.Length - 1] != '\n') sb.Append(' ');
-                    sb.Append(word);
-                    lastNewLine = false;
-                }
-            }
-            return sb.ToString();
-        }
+                    string line;
+                    string[] words;
+                    bool lineHasContent;
 
-        public string DeletePunctuation(string str)
-        {
-            Regex rgx = new Regex(@"[^\w\s]");
-            return rgx.Replace(str, "");
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (removePunctuation) line = Regex.Replace(line, @"[^\wÀ-ÿ\s]+", "");
+
+                        words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                        lineHasContent = false;
+
+                        foreach (string word in words)
+                        {
+                            if (minLength == -1 || word.Length >= minLength)
+                            {
+                                if (lineHasContent) sb.Append(' ');
+                                sb.Append(word);
+                                lineHasContent = true;
+                            }
+                        }
+
+                        if (lineHasContent) sb.Append('\n');
+                    }
+                }
+            });
+
+            return sb;
         }
     }
 }

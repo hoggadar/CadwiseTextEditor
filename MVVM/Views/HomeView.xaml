@@ -36,19 +36,18 @@
                 <StackPanel Grid.Column="0" VerticalAlignment="Center"
                             Orientation="Horizontal">
                     <Button Style="{StaticResource PrimaryButton}"
-                            Command="{Binding OpenInputFileCommand}"
+                            Command="{Binding OpenInputFilesCommand}"
                             Content="Выбрать входной файл"/>
-                    <Button Style="{StaticResource PrimaryButton}"
-                            Command="{Binding OpenOutputFileCommand}"
-                            Content="Выбрать выходной файл"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal"
                             VerticalAlignment="Center">
                     <TextBlock Style="{StaticResource BaseText}"
+                               VerticalAlignment="Center"
                                Text="Длина слова: "/>
-                    <TextBox MinWidth="100" Margin="8,0,0,0"
-                             Text="{Binding WordLength, Mode=TwoWay}"/>
+                    <TextBox Margin="8,0,0,0"
+                             Text="{Binding WordLength, Mode=TwoWay}"
+                             Style="{StaticResource PrimaryTextBox}"/>
                 </StackPanel>
 
 
@@ -73,18 +72,10 @@
 
             <!--level 3-->
             <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <Button Content="Оригинал"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource PrimaryButton}"
-                        Command="{Binding GetOriginalContentCommand}"/>
-                <Button Content="Результат"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource PrimaryButton}"
-                        Command="{Binding GetChangedContentCommand}"/>
                 <Button Content="Сохранить"
                         VerticalAlignment="Center"
                         Style="{StaticResource PrimaryButton}"
-                        Command="{Binding SaveCommand}"/>
+                        Command="{Binding SaveContentCommand}"/>
             </StackPanel>
 
         </Grid>
@@ -92,7 +83,8 @@
         <!--File Content-->
         <Grid Grid.Row="1">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <TextBlock Text="{Binding FileContent}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding FileContent}" TextWrapping="Wrap"
+                           Foreground="White"/>
             </ScrollViewer>
         </Grid>
 

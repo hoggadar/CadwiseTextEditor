@@ -1,8 +1,9 @@
-﻿namespace TextEditor.Ineterfases
+﻿using System.Text;
+
+namespace TextEditor.Ineterfases
 {
     public interface IContentHandler
     {
-        string DeleteWords(string str, int minLength);
-        string DeletePunctuation(string str);
+        Task<StringBuilder> DeleteWordsAndPunctuation(string filePath, int wordLen, bool punctuation);
     }
 }
