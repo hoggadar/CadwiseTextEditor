@@ -1,17 +1,18 @@
 ﻿using Microsoft.Win32;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
-using TextEditor.Ineterfases;
+using TextEditor.Interfaces;
 using TextEditor.MVVM.Commands;
 
 namespace TextEditor.MVVM.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
-        private readonly IContentHandler _contentHandler;
+        private readonly IFileService _fileService;
 
-        private int _wordLength;
+        private string _wordLength;
         private bool _isDeleteWords;
         private bool _isDeletePunctuation;
         private List<string> _inputFileNames;
@@ -19,15 +20,14 @@ namespace TextEditor.MVVM.ViewModels
         public ICommand OpenInputFilesCommand { get; }
         public ICommand SaveContentCommand { get; }
 
-        public HomeViewModel(IContentHandler contentHandler)
+        public HomeViewModel(IFileService fileService)
         {
-            _contentHandler = contentHandler;
+            _fileService = fileService;
 
-            _wordLength = 5;
+            _wordLength = string.Empty;
             _isDeleteWords = false;
             _isDeletePunctuation = false;
             _inputFileNames = new List<string>();
-
             OpenInputFilesCommand = new RelayCommand(_ => OpenInputFiles(), _ => true);
             SaveContentCommand = new RelayCommand(async _ => await SaveContent(), _ => true);
         }
@@ -40,42 +40,55 @@ namespace TextEditor.MVVM.ViewModels
                 Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*",
                 Multiselect = true
             };
-            if (dialog.ShowDialog() == true) _inputFileNames = dialog.FileNames.ToList();
+            if (dialog.ShowDialog() == true)
+            {
+                _inputFileNames.Clear();
+                foreach (var fileName in dialog.FileNames) _inputFileNames.Add(fileName);
+                OnPropertyChanged(nameof(InputFileNames));
+            }
         }
 
         private async Task SaveContent()
         {
             try
             {
-                foreach (var inputFileName in _inputFileNames)
-                {
-                    string outputFileName = Path.Combine(
-                        Path.GetDirectoryName(inputFileName),
-                        $"{Path.GetFileNameWithoutExtension(inputFileName)}_result{Path.GetExtension(inputFileName)}");
+                if (_inputFileNames.Count == 0)
+                    throw new InvalidOperationException("Выберите файл");
 
-                    var wordLength = (_isDeleteWords) ? _wordLength : -1;
-                    MessageBox.Show(_isDeletePunctuation.ToString());
-                    var processedContent = await _contentHandler.DeleteWordsAndPunctuation(inputFileName, wordLength, _isDeletePunctuation);
+                if (!_isDeleteWords && !_isDeletePunctuation)
+                    throw new InvalidOperationException("Выберите хотя бы одну опцию");
 
-                    using (StreamWriter writer = new StreamWriter(outputFileName))
-                    {
-                        await writer.WriteAsync(processedContent.ToString());
-                    }
+                int length = (_isDeleteWords) ? int.Parse(_wordLength) : 0;
+                await _fileService.SaveContent(_inputFileNames, _isDeleteWords, length, _isDeletePunctuation);
 
-                    MessageBox.Show("Содержимое успешно сохранено.");
-                }
-            } catch (Exception ex)
+                WordLength = string.Empty;
+                IsDeleteWords = false;
+                IsDeletePunctuation = false;
+
+                MessageBox.Show("Результат успешно записан");
+            }
+            catch (InvalidOperationException ex)
             {
-                MessageBox.Show($"Ошибка при сохранении файла: {ex.Message}");
+                MessageBox.Show(ex.Message);
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Некорректная длина слова");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
-        public int WordLength
+        public string InputFileNames => string.Join(Environment.NewLine, _inputFileNames);
+
+        public string WordLength
         {
             get => _wordLength;
             set
             {
-                _wordLength = Convert.ToInt32(value);
+                _wordLength = value;
                 OnPropertyChanged(nameof(WordLength));
             }
         }

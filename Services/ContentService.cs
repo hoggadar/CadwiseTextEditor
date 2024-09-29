@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using TextEditor.Ineterfases;
+using TextEditor.Interfaces;
 
 namespace TextEditor.Services
 {
-    public class ContentHandler : IContentHandler
+    public class ContentService : IContentService
     {
         public async Task<StringBuilder> DeleteWordsAndPunctuation(string filePath, int minLength, bool removePunctuation)
         {

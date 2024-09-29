@@ -1,8 +1,8 @@
 ﻿using System.Text;
 
-namespace TextEditor.Ineterfases
+namespace TextEditor.Interfaces
 {
-    public interface IContentHandler
+    public interface IContentService
     {
         Task<StringBuilder> DeleteWordsAndPunctuation(string filePath, int wordLen, bool punctuation);
     }

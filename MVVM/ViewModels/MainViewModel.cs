@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using TextEditor.MVVM.Commands;
 using TextEditor.MVVM.Navigation;
 
@@ -19,6 +18,7 @@ namespace TextEditor.MVVM.ViewModels
             NavigateToHomeCommand = new RelayCommand(_ => NavigationService.NavigateTo<HomeViewModel>(), _ => true);
             NavigateToHelpCommand = new RelayCommand(_ => NavigationService.NavigateTo<HelpViewModel>(), _ => true);
             NavigateToAboutCommand = new RelayCommand(_ => NavigationService.NavigateTo<AboutViewModel>(), _ => true);
+            NavigationService.NavigateTo<HomeViewModel>();
         }
 
         public INavigationService NavigationService

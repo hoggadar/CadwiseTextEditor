@@ -8,8 +8,8 @@
         xmlns:view="clr-namespace:TextEditor.MVVM.Views"
         mc:Ignorable="d"
         Title="TextEditor"
-        Height="600"
-        Width="850">
+        Height="400"
+        Width="550">
 
     <Window.Resources>
         
@@ -60,7 +60,7 @@
                                 <TextBlock Text="Cadwise" FontSize="24" FontWeight="Bold"
                                            Foreground="#01b075" VerticalAlignment="Center"
                                            Margin="0,0,6,0"/>
-                                <TextBlock Text="TextEditor" FontSize="24" FontWeight="Bold"
+                                <TextBlock Text="Текстовый Редактор" FontSize="24" FontWeight="Bold"
                                            Foreground="White" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Grid>

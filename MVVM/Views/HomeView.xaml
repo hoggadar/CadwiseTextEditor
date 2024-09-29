@@ -5,89 +5,73 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TextEditor.MVVM.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="268" d:DesignWidth="374">
 
+    <UserControl.Resources>
+        
+    </UserControl.Resources>
+    
     <Grid>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="300"/>
         </Grid.RowDefinitions>
 
-        <!--Control Panel--> 
-        <Grid Grid.Row="0">
+        <StackPanel Grid.Column="0"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left">
+            <Button Content="Выбрать файл"
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,0,12,0"
+                    Command="{Binding OpenInputFilesCommand}"/>
+            <Button Content="Сохранить"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding SaveContentCommand}"/>
+        </StackPanel>
 
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
+        <StackPanel Grid.Row="1"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Width="180">
+            <TextBlock Style="{StaticResource BaseText}"
+                       VerticalAlignment="Center"
+                       Text="Длина слова: "/>
+            <TextBox Text="{Binding WordLength, Mode=TwoWay}"
+                     Style="{StaticResource PrimaryTextBox}"/>
+        </StackPanel>
 
-            <!--level 1-->
+        <StackPanel Grid.Row="2" VerticalAlignment="Center"
+            HorizontalAlignment="Left">
 
-            <Grid Grid.Row="0">
+            <CheckBox IsChecked="{Binding IsDeleteWords}"
+              Margin="0,0,0,6">
+                <TextBlock Style="{StaticResource BaseText}"
+                   Text="Удалить слова"/>
+            </CheckBox>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-                
-                <StackPanel Grid.Column="0" VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                    <Button Style="{StaticResource PrimaryButton}"
-                            Command="{Binding OpenInputFilesCommand}"
-                            Content="Выбрать входной файл"/>
-                </StackPanel>
+            <CheckBox IsChecked="{Binding IsDeletePunctuation}">
+                <TextBlock Style="{StaticResource BaseText}"
+                   Text="Удалить знаки препинания"/>
+            </CheckBox>
 
-                <StackPanel Grid.Column="2" Orientation="Horizontal"
-                            VerticalAlignment="Center">
-                    <TextBlock Style="{StaticResource BaseText}"
-                               VerticalAlignment="Center"
-                               Text="Длина слова: "/>
-                    <TextBox Margin="8,0,0,0"
-                             Text="{Binding WordLength, Mode=TwoWay}"
-                             Style="{StaticResource PrimaryTextBox}"/>
-                </StackPanel>
+        </StackPanel>
 
-
-            </Grid>
-
-            <!--level 2-->
-            <StackPanel Grid.Row="1" VerticalAlignment="Center"
-                        HorizontalAlignment="Left">
-                
-                <CheckBox IsChecked="{Binding IsDeleteWords}"
-                          Margin="0,0,0,6">
-                    <TextBlock Style="{StaticResource BaseText}"
-                               Text="Удалить слова"/>
-                </CheckBox>
-                
-                <CheckBox IsChecked="{Binding IsDeletePunctuation}">
-                    <TextBlock Style="{StaticResource BaseText}"
-                               Text="Удалить знаки препинания"/>
-                </CheckBox>
-                
-            </StackPanel>
-
-            <!--level 3-->
-            <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <Button Content="Сохранить"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource PrimaryButton}"
-                        Command="{Binding SaveContentCommand}"/>
-            </StackPanel>
-
-        </Grid>
-        
-        <!--File Content-->
-        <Grid Grid.Row="1">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <TextBlock Text="{Binding FileContent}" TextWrapping="Wrap"
+        <Border Grid.Row="3" Padding="4"
+                BorderBrush="#01b075"
+                BorderThickness="2" 
+                CornerRadius="4">
+            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto"
+                          Padding="0,0,2,0">
+                <TextBlock Text="{Binding InputFileNames}"
+                           Padding="2" TextWrapping="Wrap"
                            Foreground="White"/>
-            </ScrollViewer>
-        </Grid>
 
+            </ScrollViewer>
+        </Border>
+        
     </Grid>
-    
 </UserControl>

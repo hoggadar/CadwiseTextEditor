@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
-using TextEditor.Ineterfases;
+using TextEditor.Interfaces;
 using TextEditor.MVVM.Navigation;
 using TextEditor.MVVM.ViewModels;
 using TextEditor.MVVM.Views;
@@ -42,7 +42,8 @@ namespace TextEditor
             {
                 return (ViewModelBase)_serviceProvider.GetRequiredService(viewModelType);
             });
-            services.AddSingleton<IContentHandler, ContentHandler>();
+            services.AddSingleton<IContentService, ContentService>();
+            services.AddSingleton<IFileService, FileService>();
         }
     }
 }
