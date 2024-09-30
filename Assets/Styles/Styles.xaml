@@ -65,7 +65,7 @@
     <Style x:Key="PrimaryTextBox" TargetType="TextBox">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Height" Value="35"/>
+        <Setter Property="Height" Value="30"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Padding" Value="10,0,0,0"/>
@@ -76,9 +76,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
                     <Grid x:Name="root" 
-                  Height="{TemplateBinding Height}" 
-                  Width="{TemplateBinding Width}" 
-                  SnapsToDevicePixels="True">
+                          Height="{TemplateBinding Height}" 
+                          Width="{TemplateBinding Width}" 
+                          SnapsToDevicePixels="True">
                         <Border x:Name="BackgroundBorder" 
                             BorderThickness="2" 
                             CornerRadius="4" 

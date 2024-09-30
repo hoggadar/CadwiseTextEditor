@@ -15,7 +15,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="64"/>
             <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -39,6 +39,7 @@
                     Width="180">
             <TextBlock Style="{StaticResource BaseText}"
                        VerticalAlignment="Center"
+                       Margin="0,0,0,4"
                        Text="Длина слова: "/>
             <TextBox Text="{Binding WordLength, Mode=TwoWay}"
                      Style="{StaticResource PrimaryTextBox}"/>
